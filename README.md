@@ -158,3 +158,6 @@ Everything else is on you. Good luck.
 - Service URLs have fallback values in code but will be configured through ECS environment variables in production.
 
 \* `JWT_SECRET` has a fallback value in the code (`change-me-in-production`) but should always be provided securely in production.
+
+## Documentation for me
+VPC module is more reusable without vpc-endpoint as some projects might not need sqs or secrets manager end points
