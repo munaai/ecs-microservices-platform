@@ -64,7 +64,7 @@ resource "aws_route_table" "app_private" {
 
 resource "aws_route_table" "db_private" {
   vpc_id = aws_vpc.main.id
-  
+
   tags = merge(var.tags, { Name = "db-private-route-table" })
 }
 
