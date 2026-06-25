@@ -161,3 +161,5 @@ Everything else is on you. Good luck.
 
 ## Documentation for me
 VPC module is more reusable without vpc-endpoint as some projects might not need sqs or secrets manager end points
+
+For security groups, new AWS provider style, where the rules are separate resources. It creates a rule inside the ALB security group.
