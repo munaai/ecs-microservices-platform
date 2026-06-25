@@ -160,6 +160,28 @@ Everything else is on you. Good luck.
 \* `JWT_SECRET` has a fallback value in the code (`change-me-in-production`) but should always be provided securely in production.
 
 ## Documentation for me
+I NEED TO DO NON ROOT USER FOR DOCKERFILE
+bootsrap - s3 - no more dynamodb required for statelock. can now use S3
 VPC module is more reusable without vpc-endpoint as some projects might not need sqs or secrets manager end points
 
 For security groups, new AWS provider style, where the rules are separate resources. It creates a rule inside the ALB security group.
+
+IAM Database Authentication
+
+AWS IAM Database Authentication allows applications to connect to an RDS database without storing a long-lived database password. Instead, the application uses its IAM role to generate a temporary authentication token that is valid for approximately 15 minutes. This removes the need to manage or rotate database passwords and follows the principle of least privilege by using short-lived credentials.
+
+IAM Database Authentication is supported by Amazon RDS for PostgreSQL and Amazon RDS for MySQL (and compatible Aurora versions). It is most suitable for applications already running on AWS services that support IAM roles, such as ECS, EC2 or Lambda, because those services can securely obtain temporary credentials without embedding secrets.
+
+Many of these services may connect to PostgreSQL independently. Without a proxy, PostgreSQL has to manage every database connection itself.
+
+IAM Database Authentication
+
+AWS IAM Database Authentication allows applications to connect to an RDS database without storing a long-lived database password. Instead, the application uses its IAM role to generate a temporary authentication token that is valid for approximately 15 minutes. This removes the need to manage or rotate database passwords and follows the principle of least privilege by using short-lived credentials.
+
+IAM Database Authentication is supported by Amazon RDS for PostgreSQL and Amazon RDS for MySQL (and compatible Aurora versions). It is most suitable for applications already running on AWS services that support IAM roles, such as ECS, EC2 or Lambda, because those services can securely obtain temporary credentials without embedding secrets.
+
+Many of these services may connect to PostgreSQL independently. Without a proxy, PostgreSQL has to manage every database connection itself.
+
+### DB Subnet Group
+
+A DB Subnet Group does not create new subnets. It is simply a logical group of existing database subnets (e.g. db-1 and db-2) that tells Amazon RDS where it is allowed to deploy the database. Think of it like a WhatsApp group—you already have the people (subnets), you're just creating a group that contains db-1 and db-2. AWS requires a DB Subnet Group instead of individual subnet IDs so it knows which subnets to use for database deployment and Multi-AZ failover.

@@ -18,3 +18,26 @@ module "security_groups" {
 
   tags = var.tags
 }
+
+module "rds" {
+  source = "./modules/rds"
+
+  db_subnet_group_name = var.db_subnet_group_name
+  db_subnet_ids        = module.vpc.db_subnet_ids
+  rds_sg_id            = module.security_groups.rds_sg_id
+
+  db_identifier = var.db_identifier
+  db_name       = var.db_name
+  db_username   = var.db_username
+  db_password   = var.db_password
+
+  engine_version          = var.engine_version
+  instance_class          = var.instance_class
+  allocated_storage       = var.allocated_storage
+  multi_az                = var.multi_az
+  backup_retention_period = var.backup_retention_period
+  deletion_protection     = var.deletion_protection
+  skip_final_snapshot     = var.skip_final_snapshot
+
+  tags = var.tags
+}
