@@ -189,3 +189,7 @@ A DB Subnet Group does not create new subnets. It is simply a logical group of e
 ### Amazon SQS
 
 Amazon SQS (Simple Queue Service) enables asynchronous communication between microservices by allowing one service to send messages to a queue while another service processes them independently. This decouples services, improves scalability and resilience, and prevents one service from blocking another. A Dead-Letter Queue (DLQ) is configured to capture messages that repeatedly fail processing, making it easier to investigate and retry failed workloads. Long polling is enabled to reduce unnecessary API requests, and server-side encryption is used to protect messages at rest.
+
+### Amazon ElastiCache (Redis)
+
+Amazon ElastiCache for Redis is an in-memory key-value database used to improve application performance by storing frequently accessed or temporary data in RAM instead of querying PostgreSQL every time. Unlike PostgreSQL, Redis is not the source of truth; it is used for caching data such as frequently requested products, sessions, or rate-limiting information. Redis is deployed in private database subnets using a subnet group and a replication group, allowing it to scale with replicas and automatic failover in the future while remaining secure and highly available.

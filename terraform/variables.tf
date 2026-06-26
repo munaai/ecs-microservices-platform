@@ -146,3 +146,13 @@ variable "redis_automatic_failover_enabled" {
 variable "redis_multi_az_enabled" {
   type = bool
 }
+
+# vpc endpoints
+
+variable "aws_region" {
+  type = string
+}
+
+variable "name_prefix" {
+  type = string
+}

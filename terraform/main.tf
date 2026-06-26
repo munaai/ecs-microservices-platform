@@ -79,3 +79,20 @@ module "redis" {
 
   tags = var.tags
 }
+
+module "vpc_endpoints" {
+  source = "./modules/vpc_endpoints"
+
+  aws_region         = var.aws_region
+  name_prefix        = var.name_prefix
+  vpc_id             = module.vpc.vpc_id
+  private_subnet_ids = module.vpc.app_subnet_ids
+
+  private_route_table_ids = [
+    module.vpc.app_private_route_table_id
+  ]
+
+  vpc_endpoint_sg_id = module.security_groups.vpc_endpoint_sg_id
+
+  tags = var.tags
+}
