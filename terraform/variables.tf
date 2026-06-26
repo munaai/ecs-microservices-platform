@@ -156,3 +156,28 @@ variable "aws_region" {
 variable "name_prefix" {
   type = string
 }
+
+# alb
+variable "alb_name" {
+  type = string
+}
+
+variable "target_group_name" {
+  type = string
+}
+
+variable "target_group_port" {
+  type = number
+}
+
+variable "health_check_path" {
+  type = string
+}
+
+variable "enable_deletion_protection" {
+  type = bool
+}
+
+variable "domain_name" {
+  type = string
+}

@@ -193,3 +193,8 @@ Amazon SQS (Simple Queue Service) enables asynchronous communication between mic
 ### Amazon ElastiCache (Redis)
 
 Amazon ElastiCache for Redis is an in-memory key-value database used to improve application performance by storing frequently accessed or temporary data in RAM instead of querying PostgreSQL every time. Unlike PostgreSQL, Redis is not the source of truth; it is used for caching data such as frequently requested products, sessions, or rate-limiting information. Redis is deployed in private database subnets using a subnet group and a replication group, allowing it to scale with replicas and automatic failover in the future while remaining secure and highly available.
+
+### ALB
+* The ALB is the entry point to the application. It receives incoming requests from users but does not send traffic directly to ECS tasks.
+* The Listener listens on a specific port (e.g. 80 or 443) and decides what action to take when a request arrives, such as forwarding it to an API Gateway target group or redirecting HTTP to HTTPS.
+* The Target Group contains the registered ECS tasks. It performs health checks and distributes incoming requests only to healthy tasks.

@@ -96,3 +96,27 @@ module "vpc_endpoints" {
 
   tags = var.tags
 }
+
+module "alb" {
+  source = "./modules/alb"
+
+  alb_name          = var.alb_name
+  target_group_name = var.target_group_name
+  target_group_port = var.target_group_port
+  health_check_path = var.health_check_path
+  certificate_arn   = data.aws_acm_certificate.this.arn
+
+  vpc_id                = module.vpc.vpc_id
+  public_subnet_ids     = module.vpc.public_subnet_ids
+  alb_security_group_id = module.security_groups.alb_sg_id
+
+  enable_deletion_protection = var.enable_deletion_protection
+
+  tags = var.tags
+}
+
+data "aws_acm_certificate" "this" {
+  domain      = var.domain_name
+  statuses    = ["ISSUED"]
+  most_recent = true
+}
