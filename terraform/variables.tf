@@ -78,10 +78,41 @@ variable "skip_final_snapshot" {
   type = bool
 }
 
+# secrets manager
 variable "secrets" {
   description = "Map of application secrets."
   type = map(object({
-    name          = string
-    description   = string
+    name        = string
+    description = string
   }))
+}
+
+#sqs
+
+variable "queue_name" {
+  type = string
+}
+
+variable "dlq_name" {
+  type = string
+}
+
+variable "visibility_timeout_seconds" {
+  type = number
+}
+
+variable "message_retention_seconds" {
+  type = number
+}
+
+variable "dlq_message_retention_seconds" {
+  type = number
+}
+
+variable "receive_wait_time_seconds" {
+  type = number
+}
+
+variable "max_receive_count" {
+  type = number
 }

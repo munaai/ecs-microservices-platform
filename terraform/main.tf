@@ -48,3 +48,17 @@ module "secrets" {
   secrets = var.secrets
   tags    = var.tags
 }
+
+module "sqs" {
+  source = "./modules/sqs"
+
+  queue_name                    = var.queue_name
+  dlq_name                      = var.dlq_name
+  visibility_timeout_seconds    = var.visibility_timeout_seconds
+  message_retention_seconds     = var.message_retention_seconds
+  dlq_message_retention_seconds = var.dlq_message_retention_seconds
+  receive_wait_time_seconds     = var.receive_wait_time_seconds
+  max_receive_count             = var.max_receive_count
+
+  tags = var.tags
+}

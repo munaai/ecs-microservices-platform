@@ -1,8 +1,8 @@
 variable "secrets" {
   description = "Map of secrets to create."
   type = map(object({
-    name          = string
-    description   = string
+    name        = string
+    description = string
   }))
 }
 
