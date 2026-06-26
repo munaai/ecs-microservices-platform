@@ -185,3 +185,7 @@ Many of these services may connect to PostgreSQL independently. Without a proxy,
 ### DB Subnet Group
 
 A DB Subnet Group does not create new subnets. It is simply a logical group of existing database subnets (e.g. db-1 and db-2) that tells Amazon RDS where it is allowed to deploy the database. Think of it like a WhatsApp group—you already have the people (subnets), you're just creating a group that contains db-1 and db-2. AWS requires a DB Subnet Group instead of individual subnet IDs so it knows which subnets to use for database deployment and Multi-AZ failover.
+
+### Amazon SQS
+
+Amazon SQS (Simple Queue Service) enables asynchronous communication between microservices by allowing one service to send messages to a queue while another service processes them independently. This decouples services, improves scalability and resilience, and prevents one service from blocking another. A Dead-Letter Queue (DLQ) is configured to capture messages that repeatedly fail processing, making it easier to investigate and retry failed workloads. Long polling is enabled to reduce unnecessary API requests, and server-side encryption is used to protect messages at rest.

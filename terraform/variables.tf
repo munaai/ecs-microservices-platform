@@ -116,3 +116,33 @@ variable "receive_wait_time_seconds" {
 variable "max_receive_count" {
   type = number
 }
+
+# redis
+
+variable "redis_subnet_group_name" {
+  type = string
+}
+
+variable "redis_replication_group_id" {
+  type = string
+}
+
+variable "redis_engine_version" {
+  type = string
+}
+
+variable "redis_node_type" {
+  type = string
+}
+
+variable "redis_num_cache_clusters" {
+  type = number
+}
+
+variable "redis_automatic_failover_enabled" {
+  type = bool
+}
+
+variable "redis_multi_az_enabled" {
+  type = bool
+}

@@ -62,3 +62,20 @@ module "sqs" {
 
   tags = var.tags
 }
+
+module "redis" {
+  source = "./modules/redis"
+
+  redis_subnet_group_name = var.redis_subnet_group_name
+  redis_subnet_ids        = module.vpc.db_subnet_ids
+  redis_sg_id             = module.security_groups.redis_sg_id
+
+  replication_group_id       = var.redis_replication_group_id
+  engine_version             = var.redis_engine_version
+  node_type                  = var.redis_node_type
+  num_cache_clusters         = var.redis_num_cache_clusters
+  automatic_failover_enabled = var.redis_automatic_failover_enabled
+  multi_az_enabled           = var.redis_multi_az_enabled
+
+  tags = var.tags
+}
