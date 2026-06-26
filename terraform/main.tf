@@ -120,3 +120,12 @@ data "aws_acm_certificate" "this" {
   statuses    = ["ISSUED"]
   most_recent = true
 }
+
+module "ecs_cluster" {
+  source = "./modules/ecs_cluster"
+
+  cluster_name               = var.ecs_cluster_name
+  container_insights_enabled = var.container_insights_enabled
+
+  tags = var.tags
+}

@@ -198,3 +198,6 @@ Amazon ElastiCache for Redis is an in-memory key-value database used to improve 
 * The ALB is the entry point to the application. It receives incoming requests from users but does not send traffic directly to ECS tasks.
 * The Listener listens on a specific port (e.g. 80 or 443) and decides what action to take when a request arrives, such as forwarding it to an API Gateway target group or redirecting HTTP to HTTPS.
 * The Target Group contains the registered ECS tasks. It performs health checks and distributes incoming requests only to healthy tasks.
+
+### ECS cluster
+ECS cluster simply groups your ECS services together. It's a container for your services

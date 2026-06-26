@@ -181,3 +181,13 @@ variable "enable_deletion_protection" {
 variable "domain_name" {
   type = string
 }
+
+# ecs cluster
+
+variable "ecs_cluster_name" {
+  type = string
+}
+
+variable "container_insights_enabled" {
+  type = bool
+}
