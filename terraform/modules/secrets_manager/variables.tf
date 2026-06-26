@@ -3,10 +3,7 @@ variable "secrets" {
   type = map(object({
     name          = string
     description   = string
-    secret_string = string
   }))
-
-  sensitive = true
 }
 
 variable "recovery_window_in_days" {

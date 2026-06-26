@@ -5,11 +5,3 @@ output "secret_arns" {
     key => secret.arn
   }
 }
-
-output "secret_ids" {
-  description = "IDs of created secrets."
-  value = {
-    for key, secret in aws_secretsmanager_secret.this :
-    key => secret.id
-  }
-}

@@ -83,8 +83,5 @@ variable "secrets" {
   type = map(object({
     name          = string
     description   = string
-    secret_string = string
   }))
-
-  sensitive = true
 }
