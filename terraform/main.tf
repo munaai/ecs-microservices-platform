@@ -41,3 +41,10 @@ module "rds" {
 
   tags = var.tags
 }
+
+module "secrets" {
+  source = "./modules/secrets_manager"
+
+  secrets = var.secrets
+  tags    = var.tags
+}

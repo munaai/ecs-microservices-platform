@@ -77,3 +77,14 @@ variable "deletion_protection" {
 variable "skip_final_snapshot" {
   type = bool
 }
+
+variable "secrets" {
+  description = "Map of application secrets."
+  type = map(object({
+    name          = string
+    description   = string
+    secret_string = string
+  }))
+
+  sensitive = true
+}
