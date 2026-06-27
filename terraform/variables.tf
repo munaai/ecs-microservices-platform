@@ -191,3 +191,29 @@ variable "ecs_cluster_name" {
 variable "container_insights_enabled" {
   type = bool
 }
+
+# iam
+
+variable "execution_role_name" {
+  type = string
+}
+
+variable "api_gateway_task_role_name" {
+  type = string
+}
+
+variable "order_service_task_role_name" {
+  type = string
+}
+
+variable "payment_service_task_role_name" {
+  type = string
+}
+
+variable "shipping_service_task_role_name" {
+  type = string
+}
+
+variable "worker_task_role_name" {
+  type = string
+}

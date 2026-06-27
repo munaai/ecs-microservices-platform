@@ -129,3 +129,59 @@ module "ecs_cluster" {
 
   tags = var.tags
 }
+
+module "iam" {
+  source = "./modules/iam"
+
+  execution_role_name = var.execution_role_name
+
+  task_roles = {
+    api_gateway = {
+      name = var.api_gateway_task_role_name
+
+      secret_arns = [
+        module.secrets_manager.secret_arns["jwt_secret"]
+      ]
+
+      sqs_queue_arns = []
+    }
+
+    order_service = {
+      name        = var.order_service_task_role_name
+      secret_arns = []
+
+      sqs_queue_arns = [
+        module.sqs.queue_arn
+      ]
+    }
+
+    payment_service = {
+      name        = var.payment_service_task_role_name
+      secret_arns = []
+
+      sqs_queue_arns = [
+        module.sqs.queue_arn
+      ]
+    }
+
+    shipping_service = {
+      name        = var.shipping_service_task_role_name
+      secret_arns = []
+
+      sqs_queue_arns = [
+        module.sqs.queue_arn
+      ]
+    }
+
+    worker = {
+      name        = var.worker_task_role_name
+      secret_arns = []
+
+      sqs_queue_arns = [
+        module.sqs.queue_arn
+      ]
+    }
+  }
+
+  tags = var.tags
+}
