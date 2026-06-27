@@ -42,7 +42,7 @@ module "rds" {
   tags = var.tags
 }
 
-module "secrets" {
+module "secrets_manager" {
   source = "./modules/secrets_manager"
 
   secrets = var.secrets
@@ -130,8 +130,8 @@ module "ecs_cluster" {
   tags = var.tags
 }
 
-module "iam" {
-  source = "./modules/iam"
+module "iam_roles" {
+  source = "./modules/iam_roles"
 
   execution_role_name = var.execution_role_name
 
