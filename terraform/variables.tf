@@ -265,3 +265,13 @@ variable "worker_image" {
 variable "scheduler_image" {
   type = string
 }
+
+# route 53
+
+variable "root_domain_name" {
+  type = string
+}
+
+variable "app_domain_name" {
+  type = string
+}

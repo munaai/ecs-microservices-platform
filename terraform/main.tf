@@ -503,3 +503,20 @@ module "scheduler_service" {
 
   tags = var.tags
 }
+
+# route53
+
+data "aws_route53_zone" "this" {
+  name         = var.root_domain_name
+  private_zone = false
+}
+
+module "route53" {
+  source = "./modules/route53"
+
+  hosted_zone_id = data.aws_route53_zone.this.zone_id
+  record_name    = var.app_domain_name
+
+  alb_dns_name = module.alb.alb_dns_name
+  alb_zone_id  = module.alb.alb_zone_id
+}
