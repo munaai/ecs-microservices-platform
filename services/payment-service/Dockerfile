@@ -10,7 +10,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o payment-service-test
 FROM alpine:3.20
 RUN addgroup -S nonroot && adduser -S nonroot -G nonroot
 WORKDIR /app
-COPY --from=build --chown=nonroot:nonroot /app/payment-service .
+COPY --from=build --chown=nonroot:nonroot /app/payment-service-test .
 USER nonroot
 EXPOSE 8083
 CMD ["./payment-service-test"]
