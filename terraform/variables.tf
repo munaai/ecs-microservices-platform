@@ -217,3 +217,13 @@ variable "shipping_service_task_role_name" {
 variable "worker_task_role_name" {
   type = string
 }
+
+# cloudwatch
+
+variable "log_group_names" {
+  type = list(string)
+}
+
+variable "log_retention_in_days" {
+  type = number
+}

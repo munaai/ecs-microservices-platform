@@ -242,3 +242,12 @@ Task Role
 
 Permission = one action
 Policy = a document containing many permissions
+
+### Cloudwatch
+Containers will write things like 
+API started on port 8080
+Order created
+Payment failed
+Database connection error
+
+CloudWatch stores those logs so you can inspect and debug your ECS services later.

@@ -185,3 +185,12 @@ module "iam_roles" {
 
   tags = var.tags
 }
+
+module "cloudwatch" {
+  source = "./modules/cloudwatch"
+
+  log_group_names   = var.log_group_names
+  retention_in_days = var.log_retention_in_days
+
+  tags = var.tags
+}
