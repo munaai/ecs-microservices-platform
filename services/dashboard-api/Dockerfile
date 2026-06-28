@@ -12,7 +12,7 @@ WORKDIR /app
 COPY --from=build /app/dashboard-api-test .
 
 # Give the binary to the non-root user
-RUN chown app:app /app/api-gateway-test
+RUN chown app:app /app/dashboard-api-test
 
 # Run as the non-root user
 USER app

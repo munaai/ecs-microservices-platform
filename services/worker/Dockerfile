@@ -12,7 +12,7 @@ WORKDIR /app
 COPY --from=build /app/worker-test .
 
 # Give the binary to the non-root user
-RUN chown app:app /app/api-gateway-test
+RUN chown app:app /app/worker-test
 
 # Run as the non-root user
 USER app

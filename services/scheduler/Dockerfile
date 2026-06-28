@@ -12,7 +12,7 @@ WORKDIR /app
 COPY --from=build /app/scheduler-test .
 
 # Give the binary to the non-root user
-RUN chown app:app /app/api-gateway-test
+RUN chown app:app /app/scheduler-test
 
 # Run as the non-root user
 USER app
