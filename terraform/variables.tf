@@ -227,3 +227,41 @@ variable "log_group_names" {
 variable "log_retention_in_days" {
   type = number
 }
+
+# ecs service
+
+variable "api_gateway_image" {
+  type = string
+}
+
+variable "order_service_image" {
+  type = string
+}
+
+variable "inventory_service_image" {
+  type = string
+}
+
+variable "payment_service_image" {
+  type = string
+}
+
+variable "notification_service_image" {
+  type = string
+}
+
+variable "shipping_service_image" {
+  type = string
+}
+
+variable "dashboard_api_image" {
+  type = string
+}
+
+variable "worker_image" {
+  type = string
+}
+
+variable "scheduler_image" {
+  type = string
+}

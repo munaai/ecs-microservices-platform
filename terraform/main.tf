@@ -194,3 +194,312 @@ module "cloudwatch" {
 
   tags = var.tags
 }
+
+module "api_gateway_service" {
+  source = "./modules/ecs_service"
+
+  service_name    = "api-gateway"
+  container_name  = "api-gateway"
+  container_image = var.api_gateway_image
+  container_port  = 8080
+
+  cpu           = 256
+  memory        = 512
+  desired_count = 1
+
+  cluster_arn        = module.ecs_cluster.cluster_arn
+  execution_role_arn = module.iam_roles.execution_role_arn
+  task_role_arn      = module.iam_roles.task_role_arns["api_gateway"]
+
+  subnet_ids            = module.vpc.app_subnet_ids
+  ecs_security_group_id = module.security_groups.ecs_sg_id
+  target_group_arn      = module.alb.target_group_arn
+
+  log_group_name = module.cloudwatch.log_group_names["/ecs/api-gateway"]
+  aws_region     = var.aws_region
+
+  environment_variables = {
+    REDIS_URL  = "redis://${module.redis.primary_endpoint_address}:6379"
+    AWS_REGION = var.aws_region
+  }
+
+  secrets = {
+    JWT_SECRET = module.secrets_manager.secret_arns["jwt_secret"]
+  }
+
+  tags = var.tags
+}
+
+module "order_service" {
+  source = "./modules/ecs_service"
+
+  service_name    = "order-service"
+  container_name  = "order-service"
+  container_image = var.order_service_image
+  container_port  = 8081
+
+  cpu           = 256
+  memory        = 512
+  desired_count = 1
+
+  cluster_arn        = module.ecs_cluster.cluster_arn
+  execution_role_arn = module.iam_roles.execution_role_arn
+  task_role_arn      = module.iam_roles.task_role_arns["order_service"]
+
+  subnet_ids            = module.vpc.app_subnet_ids
+  ecs_security_group_id = module.security_groups.ecs_sg_id
+  target_group_arn      = null
+
+  log_group_name = module.cloudwatch.log_group_names["/ecs/order-service"]
+  aws_region     = var.aws_region
+
+  environment_variables = {
+    SQS_QUEUE_URL = module.sqs.queue_url
+    AWS_REGION    = var.aws_region
+  }
+
+  secrets = {
+    DATABASE_URL = module.secrets_manager.secret_arns["database_url"]
+  }
+
+  tags = var.tags
+}
+
+module "inventory_service" {
+  source = "./modules/ecs_service"
+
+  service_name    = "inventory-service"
+  container_name  = "inventory-service"
+  container_image = var.inventory_service_image
+  container_port  = 8082
+
+  cpu           = 256
+  memory        = 512
+  desired_count = 1
+
+  cluster_arn        = module.ecs_cluster.cluster_arn
+  execution_role_arn = module.iam_roles.execution_role_arn
+  task_role_arn      = null
+
+  subnet_ids            = module.vpc.app_subnet_ids
+  ecs_security_group_id = module.security_groups.ecs_sg_id
+  target_group_arn      = null
+
+  log_group_name = module.cloudwatch.log_group_names["/ecs/inventory-service"]
+  aws_region     = var.aws_region
+
+  environment_variables = {
+    AWS_REGION = var.aws_region
+  }
+
+  secrets = {
+    DATABASE_URL = module.secrets_manager.secret_arns["database_url"]
+  }
+
+  tags = var.tags
+}
+
+module "payment_service" {
+  source = "./modules/ecs_service"
+
+  service_name    = "payment-service"
+  container_name  = "payment-service"
+  container_image = var.payment_service_image
+  container_port  = 8083
+
+  cpu           = 256
+  memory        = 512
+  desired_count = 1
+
+  cluster_arn        = module.ecs_cluster.cluster_arn
+  execution_role_arn = module.iam_roles.execution_role_arn
+  task_role_arn      = module.iam_roles.task_role_arns["payment_service"]
+
+  subnet_ids            = module.vpc.app_subnet_ids
+  ecs_security_group_id = module.security_groups.ecs_sg_id
+  target_group_arn      = null
+
+  log_group_name = module.cloudwatch.log_group_names["/ecs/payment-service"]
+  aws_region     = var.aws_region
+
+  environment_variables = {
+    SQS_QUEUE_URL = module.sqs.queue_url
+    AWS_REGION    = var.aws_region
+  }
+
+  secrets = {
+    DATABASE_URL = module.secrets_manager.secret_arns["database_url"]
+  }
+
+  tags = var.tags
+}
+
+module "notification_service" {
+  source = "./modules/ecs_service"
+
+  service_name    = "notification-service"
+  container_name  = "notification-service"
+  container_image = var.notification_service_image
+  container_port  = 8084
+
+  cpu           = 256
+  memory        = 512
+  desired_count = 1
+
+  cluster_arn        = module.ecs_cluster.cluster_arn
+  execution_role_arn = module.iam_roles.execution_role_arn
+  task_role_arn      = null
+
+  subnet_ids            = module.vpc.app_subnet_ids
+  ecs_security_group_id = module.security_groups.ecs_sg_id
+  target_group_arn      = null
+
+  log_group_name = module.cloudwatch.log_group_names["/ecs/notification-service"]
+  aws_region     = var.aws_region
+
+  environment_variables = {
+    AWS_REGION = var.aws_region
+  }
+
+  secrets = {
+    DATABASE_URL = module.secrets_manager.secret_arns["database_url"]
+  }
+
+  tags = var.tags
+}
+
+module "shipping_service" {
+  source = "./modules/ecs_service"
+
+  service_name    = "shipping-service"
+  container_name  = "shipping-service"
+  container_image = var.shipping_service_image
+  container_port  = 8085
+
+  cpu           = 256
+  memory        = 512
+  desired_count = 1
+
+  cluster_arn        = module.ecs_cluster.cluster_arn
+  execution_role_arn = module.iam_roles.execution_role_arn
+  task_role_arn      = module.iam_roles.task_role_arns["shipping_service"]
+
+  subnet_ids            = module.vpc.app_subnet_ids
+  ecs_security_group_id = module.security_groups.ecs_sg_id
+  target_group_arn      = null
+
+  log_group_name = module.cloudwatch.log_group_names["/ecs/shipping-service"]
+  aws_region     = var.aws_region
+
+  environment_variables = {
+    SQS_QUEUE_URL = module.sqs.queue_url
+    AWS_REGION    = var.aws_region
+  }
+
+  secrets = {
+    DATABASE_URL = module.secrets_manager.secret_arns["database_url"]
+  }
+
+  tags = var.tags
+}
+
+module "dashboard_api_service" {
+  source = "./modules/ecs_service"
+
+  service_name    = "dashboard-api"
+  container_name  = "dashboard-api"
+  container_image = var.dashboard_api_image
+  container_port  = 8086
+
+  cpu           = 256
+  memory        = 512
+  desired_count = 1
+
+  cluster_arn        = module.ecs_cluster.cluster_arn
+  execution_role_arn = module.iam_roles.execution_role_arn
+  task_role_arn      = null
+
+  subnet_ids            = module.vpc.app_subnet_ids
+  ecs_security_group_id = module.security_groups.ecs_sg_id
+  target_group_arn      = null
+
+  log_group_name = module.cloudwatch.log_group_names["/ecs/dashboard-api"]
+  aws_region     = var.aws_region
+
+  environment_variables = {
+    AWS_REGION = var.aws_region
+  }
+
+  secrets = {
+    DATABASE_URL = module.secrets_manager.secret_arns["database_url"]
+  }
+
+  tags = var.tags
+}
+
+module "worker_service" {
+  source = "./modules/ecs_service"
+
+  service_name    = "worker"
+  container_name  = "worker"
+  container_image = var.worker_image
+  container_port  = 8090
+
+  cpu           = 256
+  memory        = 512
+  desired_count = 1
+
+  cluster_arn        = module.ecs_cluster.cluster_arn
+  execution_role_arn = module.iam_roles.execution_role_arn
+  task_role_arn      = module.iam_roles.task_role_arns["worker"]
+
+  subnet_ids            = module.vpc.app_subnet_ids
+  ecs_security_group_id = module.security_groups.ecs_sg_id
+  target_group_arn      = null
+
+  log_group_name = module.cloudwatch.log_group_names["/ecs/worker"]
+  aws_region     = var.aws_region
+
+  environment_variables = {
+    SQS_QUEUE_URL = module.sqs.queue_url
+    AWS_REGION    = var.aws_region
+  }
+
+  secrets = {}
+
+  tags = var.tags
+}
+
+module "scheduler_service" {
+  source = "./modules/ecs_service"
+
+  service_name    = "scheduler"
+  container_name  = "scheduler"
+  container_image = var.scheduler_image
+  container_port  = 8091
+
+  cpu           = 256
+  memory        = 512
+  desired_count = 1
+
+  cluster_arn        = module.ecs_cluster.cluster_arn
+  execution_role_arn = module.iam_roles.execution_role_arn
+  task_role_arn      = null
+
+  subnet_ids            = module.vpc.app_subnet_ids
+  ecs_security_group_id = module.security_groups.ecs_sg_id
+  target_group_arn      = null
+
+  log_group_name = module.cloudwatch.log_group_names["/ecs/scheduler"]
+  aws_region     = var.aws_region
+
+  environment_variables = {
+    AWS_REGION = var.aws_region
+  }
+
+  secrets = {
+    DATABASE_URL = module.secrets_manager.secret_arns["database_url"]
+  }
+
+  tags = var.tags
+}

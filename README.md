@@ -251,3 +251,7 @@ Payment failed
 Database connection error
 
 CloudWatch stores those logs so you can inspect and debug your ECS services later.
+
+### ECS SERVICE
+
+ECS has 3 different parts: task definition, ECS service and running taks
