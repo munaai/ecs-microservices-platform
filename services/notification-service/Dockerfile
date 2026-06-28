@@ -8,14 +8,9 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o notification-service-test
 
 #2
 FROM alpine:3.20
+RUN addgroup -S nonroot && adduser -S nonroot -G nonroot
 WORKDIR /app
-COPY --from=build /app/notification-service-test .
-
-# Give the binary to the non-root user
-RUN chown app:app /app/notification-service-test
-
-# Run as the non-root user
-USER app
-
+COPY --from=build --chown=nonroot:nonroot /app/notification-service .
+USER nonroot
 EXPOSE 8084
 CMD ["./notification-service-test"]

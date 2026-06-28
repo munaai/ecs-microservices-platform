@@ -8,14 +8,9 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o dashboard-api-test
 
 #2
 FROM alpine:3.20
+RUN addgroup -S nonroot && adduser -S nonroot -G nonroot
 WORKDIR /app
-COPY --from=build /app/dashboard-api-test .
-
-# Give the binary to the non-root user
-RUN chown app:app /app/dashboard-api-test
-
-# Run as the non-root user
-USER app
-
+COPY --from=build --chown=nonroot:nonroot /app/dashboard-api-test .
+USER nonroot
 EXPOSE 8086
 CMD ["./dashboard-api-test"]

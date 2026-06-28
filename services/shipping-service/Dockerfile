@@ -8,14 +8,9 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o shipping-service-test
 
 #2
 FROM alpine:3.20
+RUN addgroup -S nonroot && adduser -S nonroot -G nonroot
 WORKDIR /app
-COPY --from=build /app/shipping-service-test .
-
-# Give the binary to the non-root user
-RUN chown app:app /app/shipping-service-test
-
-# Run as the non-root user
-USER app
-
+COPY --from=build --chown=nonroot:nonroot /app/shipping-service .
+USER nonroot
 EXPOSE 8085
 CMD ["./shipping-service-test"]
