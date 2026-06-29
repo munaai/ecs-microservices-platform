@@ -4,13 +4,13 @@ on:
   pull_request:
     paths:
       - "terraform/**"
-      - ".github/workflows/terraform-plan.yml"
+      - ".github/workflows/plan.yml"
   push:
     branches:
       - main
     paths:
       - "terraform/**"
-      - ".github/workflows/terraform-plan.yml"
+      - ".github/workflows/plan.yml"
   workflow_run:
     workflows: ["Docker Build & Push"]
     types: [completed]
