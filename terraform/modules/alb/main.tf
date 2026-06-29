@@ -1,3 +1,14 @@
+terraform {
+  required_version = ">= 1.10.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
 resource "aws_lb" "this" {
   name               = var.alb_name
   internal           = false

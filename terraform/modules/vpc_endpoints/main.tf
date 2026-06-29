@@ -1,3 +1,14 @@
+terraform {
+  required_version = ">= 1.10.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
 locals {
   interface_endpoints = {
     ecr_api        = "com.amazonaws.${var.aws_region}.ecr.api"

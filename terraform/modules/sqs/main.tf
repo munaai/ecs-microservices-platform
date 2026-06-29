@@ -1,3 +1,14 @@
+terraform {
+  required_version = ">= 1.10.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
 resource "aws_sqs_queue" "dlq" {
   name                      = var.dlq_name
   message_retention_seconds = var.dlq_message_retention_seconds

@@ -1,3 +1,14 @@
+terraform {
+  required_version = ">= 1.10.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
 resource "aws_elasticache_subnet_group" "this" {
   name       = var.redis_subnet_group_name
   subnet_ids = var.redis_subnet_ids
