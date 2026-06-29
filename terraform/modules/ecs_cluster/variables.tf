@@ -8,3 +8,8 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "container_insights_enabled" {
+  type    = bool
+  default = false
+}
