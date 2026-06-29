@@ -1,0 +1,104 @@
+name: Terraform Plan
+
+on:
+  workflow_run:
+    workflows: ["Docker Build & Push"]
+    types: [completed]
+
+  workflow_dispatch:
+    inputs:
+      run_checkov:
+        description: "Run Checkov scan"
+        required: false
+        default: "false"
+
+env:
+  AWS_REGION: eu-west-2
+  ECR_REGISTRY: 985539771340.dkr.ecr.eu-west-2.amazonaws.com
+  TF_WORKING_DIR: terraform
+
+jobs:
+  terraform-plan:
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::985539771340:role/github-actions-terraform
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Format Check
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform init
+
+      - name: Terraform Validate
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform validate
+
+      - name: Create CI tfvars
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: |
+          IMAGE_TAG="${{ github.event.workflow_run.head_sha || github.sha }}"
+
+          cat > ci.auto.tfvars <<EOF
+          ecs_desired_count = 0
+
+          api_gateway_image = "${ECR_REGISTRY}/api-gateway:${IMAGE_TAG}"
+          order_service_image = "${ECR_REGISTRY}/order-service:${IMAGE_TAG}"
+          inventory_service_image = "${ECR_REGISTRY}/inventory-service:${IMAGE_TAG}"
+          payment_service_image = "${ECR_REGISTRY}/payment-service:${IMAGE_TAG}"
+          notification_service_image = "${ECR_REGISTRY}/notification-service:${IMAGE_TAG}"
+          shipping_service_image = "${ECR_REGISTRY}/shipping-service:${IMAGE_TAG}"
+          dashboard_api_image = "${ECR_REGISTRY}/dashboard-api:${IMAGE_TAG}"
+          worker_image = "${ECR_REGISTRY}/worker:${IMAGE_TAG}"
+          scheduler_image = "${ECR_REGISTRY}/scheduler:${IMAGE_TAG}"
+          EOF
+
+      - name: Install TFLint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      - name: Run TFLint
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: |
+          tflint --init
+          tflint --recursive
+
+      - name: Install Checkov
+        if: ${{ github.event.inputs.run_checkov == 'true' }}
+        run: pip install checkov==3.2.450
+
+      - name: Run Checkov
+        if: ${{ github.event.inputs.run_checkov == 'true' }}
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: |
+          checkov -d . --quiet --framework terraform \
+            --skip-check CKV2_AWS_31,CKV2_AWS_76,CKV_AWS_336,CKV_AWS_150,CKV_AWS_157,CKV_AWS_353,CKV_AWS_16,CKV_AWS_118,CKV_AWS_226,CKV_AWS_129,CKV_AWS_149,CKV2_AWS_57,CKV2_AWS_5
+
+      - name: Terraform Plan
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform plan -out=tfplan
+
+      - name: Upload Terraform plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan
+          path: terraform/tfplan
