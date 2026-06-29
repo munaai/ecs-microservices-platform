@@ -255,3 +255,9 @@ CloudWatch stores those logs so you can inspect and debug your ECS services late
 ### ECS SERVICE
 
 ECS has 3 different parts: task definition, ECS service and running taks
+
+### cicd
+plan artifact for terraform to understand and human readable artifact both uploaded to Github Actions
+Apply will use that same artifact.
+Github stores that artifact temporarily for 7 days
+Compared to storing it in S3, GitHub Artifacts are a better fit because they are tied to a specific workflow run.
