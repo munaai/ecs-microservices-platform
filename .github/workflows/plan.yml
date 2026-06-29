@@ -64,19 +64,20 @@ jobs:
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform fmt -check -recursive
 
+      - name: Create Terraform plugin cache directory
+        run: mkdir -p ~/.terraform.d/plugin-cache
+
       - name: Cache Terraform providers
         uses: actions/cache@v4
         with:
           path: |
             ~/.terraform.d/plugin-cache
-            terraform/.terraform
           key: terraform-${{ runner.os }}-${{ hashFiles('terraform/.terraform.lock.hcl') }}
           restore-keys: |
             terraform-${{ runner.os }}-
 
       - name: Configure Terraform plugin cache
         run: |
-          mkdir -p ~/.terraform.d/plugin-cache
           echo 'plugin_cache_dir = "$HOME/.terraform.d/plugin-cache"' > ~/.terraformrc
 
       - name: Terraform Init
@@ -108,6 +109,9 @@ jobs:
 
       - name: Install TFLint
         run: curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      - name: Create TFLint plugin cache directory
+        run: mkdir -p ~/.tflint.d/plugins
 
       - name: Cache TFLint plugins
         uses: actions/cache@v4
