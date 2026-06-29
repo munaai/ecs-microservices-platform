@@ -14,8 +14,9 @@ on:
 
 env:
   AWS_REGION: eu-west-2
-  ECR_REGISTRY: 985539771340.dkr.ecr.eu-west-2.amazonaws.com
   TF_WORKING_DIR: terraform
+  ECR_REGISTRY: 985539771340.dkr.ecr.eu-west-2.amazonaws.com
+  TFVARS_S3_URI: s3://YOUR-CONFIG-BUCKET/config/dev.tfvars
 
 jobs:
   terraform-plan:
@@ -41,6 +42,9 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
+      - name: Download tfvars from S3
+        run: aws s3 cp $TFVARS_S3_URI $TF_WORKING_DIR/dev.tfvars
+
       - name: Terraform Format Check
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform fmt -check -recursive
@@ -53,7 +57,7 @@ jobs:
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform validate
 
-      - name: Create CI tfvars
+      - name: Create CI overrides
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: |
           IMAGE_TAG="${{ github.event.workflow_run.head_sha || github.sha }}"
@@ -73,8 +77,7 @@ jobs:
           EOF
 
       - name: Install TFLint
-        run: |
-          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+        run: curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
       - name: Run TFLint
         working-directory: ${{ env.TF_WORKING_DIR }}
@@ -89,13 +92,11 @@ jobs:
       - name: Run Checkov
         if: ${{ github.event.inputs.run_checkov == 'true' }}
         working-directory: ${{ env.TF_WORKING_DIR }}
-        run: |
-          checkov -d . --quiet --framework terraform \
-            --skip-check CKV2_AWS_31,CKV2_AWS_76,CKV_AWS_336,CKV_AWS_150,CKV_AWS_157,CKV_AWS_353,CKV_AWS_16,CKV_AWS_118,CKV_AWS_226,CKV_AWS_129,CKV_AWS_149,CKV2_AWS_57,CKV2_AWS_5
+        run: checkov -d . --quiet --framework terraform
 
       - name: Terraform Plan
         working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform plan -out=tfplan
+        run: terraform plan -var-file=dev.tfvars -out=tfplan
 
       - name: Upload Terraform plan
         uses: actions/upload-artifact@v4
