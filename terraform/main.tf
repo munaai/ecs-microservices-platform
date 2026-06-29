@@ -204,7 +204,7 @@ module "api_gateway_service" {
 
   cpu           = 256
   memory        = 512
-  desired_count = 1
+  desired_count = var.ecs_desired_count
 
   cluster_arn        = module.ecs_cluster.cluster_arn
   execution_role_arn = module.iam_roles.execution_role_arn
@@ -239,7 +239,7 @@ module "order_service" {
 
   cpu           = 256
   memory        = 512
-  desired_count = 1
+  desired_count = var.ecs_desired_count
 
   cluster_arn        = module.ecs_cluster.cluster_arn
   execution_role_arn = module.iam_roles.execution_role_arn
@@ -274,7 +274,7 @@ module "inventory_service" {
 
   cpu           = 256
   memory        = 512
-  desired_count = 1
+  desired_count = var.ecs_desired_count
 
   cluster_arn        = module.ecs_cluster.cluster_arn
   execution_role_arn = module.iam_roles.execution_role_arn
@@ -308,7 +308,7 @@ module "payment_service" {
 
   cpu           = 256
   memory        = 512
-  desired_count = 1
+  desired_count = var.ecs_desired_count
 
   cluster_arn        = module.ecs_cluster.cluster_arn
   execution_role_arn = module.iam_roles.execution_role_arn
@@ -343,7 +343,7 @@ module "notification_service" {
 
   cpu           = 256
   memory        = 512
-  desired_count = 1
+  desired_count = var.ecs_desired_count
 
   cluster_arn        = module.ecs_cluster.cluster_arn
   execution_role_arn = module.iam_roles.execution_role_arn
@@ -377,7 +377,7 @@ module "shipping_service" {
 
   cpu           = 256
   memory        = 512
-  desired_count = 1
+  desired_count = var.ecs_desired_count
 
   cluster_arn        = module.ecs_cluster.cluster_arn
   execution_role_arn = module.iam_roles.execution_role_arn
@@ -412,7 +412,7 @@ module "dashboard_api_service" {
 
   cpu           = 256
   memory        = 512
-  desired_count = 1
+  desired_count = var.ecs_desired_count
 
   cluster_arn        = module.ecs_cluster.cluster_arn
   execution_role_arn = module.iam_roles.execution_role_arn
@@ -446,7 +446,7 @@ module "worker_service" {
 
   cpu           = 256
   memory        = 512
-  desired_count = 1
+  desired_count = var.ecs_desired_count
 
   cluster_arn        = module.ecs_cluster.cluster_arn
   execution_role_arn = module.iam_roles.execution_role_arn
@@ -479,7 +479,7 @@ module "scheduler_service" {
 
   cpu           = 256
   memory        = 512
-  desired_count = 1
+  desired_count = var.ecs_desired_count
 
   cluster_arn        = module.ecs_cluster.cluster_arn
   execution_role_arn = module.iam_roles.execution_role_arn

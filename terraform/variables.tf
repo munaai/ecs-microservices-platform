@@ -261,6 +261,10 @@ variable "scheduler_image" {
   type = string
 }
 
+variable "ecs_desired_count" {
+  type = number
+}
+
 # route 53
 
 variable "root_domain_name" {
