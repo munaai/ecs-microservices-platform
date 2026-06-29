@@ -29,7 +29,6 @@ module "rds" {
   db_identifier = var.db_identifier
   db_name       = var.db_name
   db_username   = var.db_username
-  db_password   = var.db_password
 
   engine_version          = var.engine_version
   instance_class          = var.instance_class

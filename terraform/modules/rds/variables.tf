@@ -28,12 +28,6 @@ variable "db_username" {
   type        = string
 }
 
-variable "db_password" {
-  description = "Master password for PostgreSQL."
-  type        = string
-  sensitive   = true
-}
-
 variable "engine_version" {
   description = "PostgreSQL engine version."
   type        = string
