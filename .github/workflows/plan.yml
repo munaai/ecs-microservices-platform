@@ -16,7 +16,7 @@ env:
   AWS_REGION: eu-west-2
   TF_WORKING_DIR: terraform
   ECR_REGISTRY: 985539771340.dkr.ecr.eu-west-2.amazonaws.com
-  TFVARS_S3_URI: s3://YOUR-CONFIG-BUCKET/config/dev.tfvars
+  TFVARS_S3_URI: s3://ecs-microservices-config/dev/terraform.tfvars
 
 jobs:
   terraform-plan:
