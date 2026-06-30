@@ -261,3 +261,15 @@ plan artifact for terraform to understand and human readable artifact both uploa
 Apply will use that same artifact.
 Github stores that artifact temporarily for 7 days
 Compared to storing it in S3, GitHub Artifacts are a better fit because they are tied to a specific workflow run.
+
+When Terraform destroys an aws_secretsmanager_secret, AWS doesn’t permanently delete it immediately. Instead, it schedules it for deletion with a 30-day recovery window unless you specify otherwise.
+
+The recovery window can be:
+
+* Minimum: 7 days
+* Maximum: 30 days
+* Default: 30 days
+
+That’s why you saw:
+
+“You can’t create this secret because a secret with this name is already scheduled for deletion.”

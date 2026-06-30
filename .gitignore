@@ -25,6 +25,8 @@ services/worker/worker
 **/*.tfstate.*
 **/terraform.tfvars
 **/*.tfplan
+*.tfvars
+*.auto.tfvars
 
 # IDE
 .vscode/
