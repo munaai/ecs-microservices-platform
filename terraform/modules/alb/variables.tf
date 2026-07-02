@@ -2,14 +2,21 @@ variable "alb_name" {
   type = string
 }
 
-variable "target_group_name" {
+variable "api_gateway_target_group_name" {
   type = string
 }
 
-variable "target_group_port" {
+variable "api_gateway_target_group_port" {
   type = number
 }
 
+variable "dashboard_api_target_group_name" {
+  type = string
+}
+
+variable "dashboard_api_target_group_port" {
+  type = number
+}
 variable "health_check_path" {
   type = string
 }

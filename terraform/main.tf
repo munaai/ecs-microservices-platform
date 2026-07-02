@@ -100,11 +100,13 @@ module "vpc_endpoints" {
 module "alb" {
   source = "./modules/alb"
 
-  alb_name          = var.alb_name
-  target_group_name = var.target_group_name
-  target_group_port = var.target_group_port
-  health_check_path = var.health_check_path
-  certificate_arn   = data.aws_acm_certificate.this.arn
+  alb_name                        = var.alb_name
+  api_gateway_target_group_name   = var.api_gateway_target_group_name
+  dashboard_api_target_group_name = var.dashboard_api_target_group_name
+  api_gateway_target_group_port   = var.api_gateway_target_group_port
+  dashboard_api_target_group_port = var.dashboard_api_target_group_port
+  health_check_path               = var.health_check_path
+  certificate_arn                 = data.aws_acm_certificate.this.arn
 
   vpc_id                = module.vpc.vpc_id
   public_subnet_ids     = module.vpc.public_subnet_ids
@@ -218,7 +220,7 @@ module "api_gateway_service" {
 
   subnet_ids            = module.vpc.app_subnet_ids
   ecs_security_group_id = module.security_groups.ecs_sg_id
-  target_group_arn      = module.alb.target_group_arn
+  target_group_arn      = module.alb.api_gateway_target_group_arn
 
   log_group_name = module.cloudwatch.log_group_names["/ecs/api-gateway"]
   aws_region     = var.aws_region
@@ -426,7 +428,7 @@ module "dashboard_api_service" {
 
   subnet_ids            = module.vpc.app_subnet_ids
   ecs_security_group_id = module.security_groups.ecs_sg_id
-  target_group_arn      = null
+  target_group_arn      = module.alb.dashboard_api_target_group_arn
 
   log_group_name = module.cloudwatch.log_group_names["/ecs/dashboard-api"]
   aws_region     = var.aws_region
