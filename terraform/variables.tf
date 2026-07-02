@@ -82,6 +82,11 @@ variable "secrets" {
   }))
 }
 
+variable "recovery_window_in_days" {
+  description = "Number of days before a deleted secret is permanently deleted."
+  type        = number
+}
+
 #sqs
 
 variable "queue_name" {

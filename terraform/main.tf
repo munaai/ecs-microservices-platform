@@ -44,8 +44,9 @@ module "rds" {
 module "secrets_manager" {
   source = "./modules/secrets_manager"
 
-  secrets = var.secrets
-  tags    = var.tags
+  secrets                 = var.secrets
+  recovery_window_in_days = var.recovery_window_in_days
+  tags                    = var.tags
 }
 
 module "sqs" {
