@@ -18,3 +18,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "execution_secret_arns" {
+  description = "Secrets the ECS execution role can retrieve."
+  type        = list(string)
+  default     = []
+}

@@ -273,3 +273,6 @@ The recovery window can be:
 That’s why you saw:
 
 “You can’t create this secret because a secret with this name is already scheduled for deletion.”
+
+### problems
+When task doesnt start look at excecution role first. 

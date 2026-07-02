@@ -134,6 +134,11 @@ module "iam_roles" {
 
   execution_role_name = var.execution_role_name
 
+  execution_secret_arns = [
+    module.secrets_manager.secret_arns["database_url"],
+    module.secrets_manager.secret_arns["jwt_secret"]
+  ]
+
   task_roles = {
     api_gateway = {
       name = var.api_gateway_task_role_name
