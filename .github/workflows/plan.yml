@@ -94,8 +94,6 @@ jobs:
           IMAGE_TAG="${{ github.event.workflow_run.head_sha || github.sha }}"
 
           cat > ci.auto.tfvars <<EOF
-          ecs_desired_count = 0
-
           api_gateway_image = "${ECR_REGISTRY}/api-gateway:${IMAGE_TAG}"
           order_service_image = "${ECR_REGISTRY}/order-service:${IMAGE_TAG}"
           inventory_service_image = "${ECR_REGISTRY}/inventory-service:${IMAGE_TAG}"
