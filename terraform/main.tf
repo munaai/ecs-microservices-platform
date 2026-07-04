@@ -41,12 +41,13 @@ module "rds" {
   tags = var.tags
 }
 
-module "secrets_manager" {
-  source = "./modules/secrets_manager"
+# secrets
+data "aws_secretsmanager_secret" "database_url" {
+  name = "ecs-microservices/database-url"
+}
 
-  secrets                 = var.secrets
-  recovery_window_in_days = var.recovery_window_in_days
-  tags                    = var.tags
+data "aws_secretsmanager_secret" "jwt_secret" {
+  name = "ecs-microservices/jwt-secret"
 }
 
 module "sqs" {
@@ -138,8 +139,8 @@ module "iam_roles" {
   execution_role_name = var.execution_role_name
 
   execution_secret_arns = [
-    module.secrets_manager.secret_arns["database_url"],
-    module.secrets_manager.secret_arns["jwt_secret"]
+    data.aws_secretsmanager_secret.database_url.arn,
+    data.aws_secretsmanager_secret.jwt_secret.arn
   ]
 
   task_roles = {
@@ -147,7 +148,7 @@ module "iam_roles" {
       name = var.api_gateway_task_role_name
 
       secret_arns = [
-        module.secrets_manager.secret_arns["jwt_secret"]
+        data.aws_secretsmanager_secret.jwt_secret.arn
       ]
 
       sqs_queue_arns = []
@@ -231,7 +232,7 @@ module "api_gateway_service" {
   }
 
   secrets = {
-    JWT_SECRET = module.secrets_manager.secret_arns["jwt_secret"]
+    JWT_SECRET = data.aws_secretsmanager_secret.jwt_secret.arn
   }
 
   tags = var.tags
@@ -266,7 +267,7 @@ module "order_service" {
   }
 
   secrets = {
-    DATABASE_URL = module.secrets_manager.secret_arns["database_url"]
+    DATABASE_URL = data.aws_secretsmanager_secret.database_url.arn
   }
 
   tags = var.tags
@@ -300,7 +301,7 @@ module "inventory_service" {
   }
 
   secrets = {
-    DATABASE_URL = module.secrets_manager.secret_arns["database_url"]
+    DATABASE_URL = data.aws_secretsmanager_secret.database_url.arn
   }
 
   tags = var.tags
@@ -335,7 +336,7 @@ module "payment_service" {
   }
 
   secrets = {
-    DATABASE_URL = module.secrets_manager.secret_arns["database_url"]
+    DATABASE_URL = data.aws_secretsmanager_secret.database_url.arn
   }
 
   tags = var.tags
@@ -369,7 +370,7 @@ module "notification_service" {
   }
 
   secrets = {
-    DATABASE_URL = module.secrets_manager.secret_arns["database_url"]
+    DATABASE_URL = data.aws_secretsmanager_secret.database_url.arn
   }
 
   tags = var.tags
@@ -404,7 +405,7 @@ module "shipping_service" {
   }
 
   secrets = {
-    DATABASE_URL = module.secrets_manager.secret_arns["database_url"]
+    DATABASE_URL = data.aws_secretsmanager_secret.database_url.arn
   }
 
   tags = var.tags
@@ -438,7 +439,7 @@ module "dashboard_api_service" {
   }
 
   secrets = {
-    DATABASE_URL = module.secrets_manager.secret_arns["database_url"]
+    DATABASE_URL = data.aws_secretsmanager_secret.database_url.arn
   }
 
   tags = var.tags
@@ -505,7 +506,7 @@ module "scheduler_service" {
   }
 
   secrets = {
-    DATABASE_URL = module.secrets_manager.secret_arns["database_url"]
+    DATABASE_URL = data.aws_secretsmanager_secret.database_url.arn
   }
 
   tags = var.tags

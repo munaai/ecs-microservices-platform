@@ -276,7 +276,11 @@ That’s why you saw:
 
 ### problems
 When task doesnt start look at excecution role first. 
+
 secrets manager has a weird deletion process.
 When Terraform “deletes” a secret, AWS often does not delete it immediately.
 It goes into a Scheduled for deletion state. Which means The secret is hidden/disabled, but the name is still reserved.
 I had to keep renaming the secrets but after this recovery_window_in_days = 0, whenever i destroy it goes immediately.
+Secrets stack!!
+Even in production, teams still separate things by lifecycle and blast radius.
+Secrets are usually more sensitive and longer-lived than app infrastructure.

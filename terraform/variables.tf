@@ -73,20 +73,6 @@ variable "skip_final_snapshot" {
   type = bool
 }
 
-# secrets manager
-variable "secrets" {
-  description = "Map of application secrets."
-  type = map(object({
-    name        = string
-    description = string
-  }))
-}
-
-variable "recovery_window_in_days" {
-  description = "Number of days before a deleted secret is permanently deleted."
-  type        = number
-}
-
 #sqs
 
 variable "queue_name" {
