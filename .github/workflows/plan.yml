@@ -147,7 +147,7 @@ jobs:
 
       - name: Terraform Plan
         working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform plan -input=false -var-file=dev.tfvars -out=tfplan
+        run: terraform plan -input=false -var-file=dev.tfvars -var-file=ci.auto.tfvars -out=tfplan
 
       - name: Generate human-readable plan
         working-directory: ${{ env.TF_WORKING_DIR }}
