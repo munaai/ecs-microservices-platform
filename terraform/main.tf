@@ -42,9 +42,6 @@ module "rds" {
 }
 
 # secrets
-data "aws_secretsmanager_secret" "database_url" {
-  name = "ecs-microservices/database-url"
-}
 
 data "aws_secretsmanager_secret" "jwt_secret" {
   name = "ecs-microservices/jwt-secret"
@@ -139,8 +136,8 @@ module "iam_roles" {
   execution_role_name = var.execution_role_name
 
   execution_secret_arns = [
-    data.aws_secretsmanager_secret.database_url.arn,
-    data.aws_secretsmanager_secret.jwt_secret.arn
+    data.aws_secretsmanager_secret.jwt_secret.arn,
+    module.rds.master_user_secret_arn
   ]
 
   task_roles = {
@@ -273,10 +270,14 @@ module "order_service" {
   environment_variables = {
     SQS_QUEUE_URL = module.sqs.queue_url
     AWS_REGION    = var.aws_region
+
+    DB_HOST     = module.rds.endpoint
+    DB_NAME     = var.db_name
+    DB_USERNAME = var.db_username
   }
 
   secrets = {
-    DATABASE_URL = data.aws_secretsmanager_secret.database_url.arn
+    DB_PASSWORD = "${module.rds.master_user_secret_arn}:password::"
   }
 
   tags = var.tags
@@ -309,10 +310,14 @@ module "inventory_service" {
 
   environment_variables = {
     AWS_REGION = var.aws_region
+
+    DB_HOST     = module.rds.endpoint
+    DB_NAME     = var.db_name
+    DB_USERNAME = var.db_username
   }
 
   secrets = {
-    DATABASE_URL = data.aws_secretsmanager_secret.database_url.arn
+    DB_PASSWORD = "${module.rds.master_user_secret_arn}:password::"
   }
 
   tags = var.tags
@@ -346,10 +351,14 @@ module "payment_service" {
   environment_variables = {
     SQS_QUEUE_URL = module.sqs.queue_url
     AWS_REGION    = var.aws_region
+
+    DB_HOST     = module.rds.endpoint
+    DB_NAME     = var.db_name
+    DB_USERNAME = var.db_username
   }
 
   secrets = {
-    DATABASE_URL = data.aws_secretsmanager_secret.database_url.arn
+    DB_PASSWORD = "${module.rds.master_user_secret_arn}:password::"
   }
 
   tags = var.tags
@@ -382,10 +391,14 @@ module "notification_service" {
 
   environment_variables = {
     AWS_REGION = var.aws_region
+
+    DB_HOST     = module.rds.endpoint
+    DB_NAME     = var.db_name
+    DB_USERNAME = var.db_username
   }
 
   secrets = {
-    DATABASE_URL = data.aws_secretsmanager_secret.database_url.arn
+    DB_PASSWORD = "${module.rds.master_user_secret_arn}:password::"
   }
 
   tags = var.tags
@@ -419,10 +432,14 @@ module "shipping_service" {
   environment_variables = {
     SQS_QUEUE_URL = module.sqs.queue_url
     AWS_REGION    = var.aws_region
+
+    DB_HOST     = module.rds.endpoint
+    DB_NAME     = var.db_name
+    DB_USERNAME = var.db_username
   }
 
   secrets = {
-    DATABASE_URL = data.aws_secretsmanager_secret.database_url.arn
+    DB_PASSWORD = "${module.rds.master_user_secret_arn}:password::"
   }
 
   tags = var.tags
@@ -455,10 +472,14 @@ module "dashboard_api_service" {
 
   environment_variables = {
     AWS_REGION = var.aws_region
+
+    DB_HOST     = module.rds.endpoint
+    DB_NAME     = var.db_name
+    DB_USERNAME = var.db_username
   }
 
   secrets = {
-    DATABASE_URL = data.aws_secretsmanager_secret.database_url.arn
+    DB_PASSWORD = "${module.rds.master_user_secret_arn}:password::"
   }
 
   tags = var.tags
@@ -500,6 +521,8 @@ module "worker_service" {
 module "scheduler_service" {
   source = "./modules/ecs_service"
 
+  service_discovery_arn = module.service_discovery.service_arns["scheduler-service"]
+
   service_name    = "scheduler"
   container_name  = "scheduler"
   container_image = var.scheduler_image
@@ -522,10 +545,14 @@ module "scheduler_service" {
 
   environment_variables = {
     AWS_REGION = var.aws_region
+
+    DB_HOST     = module.rds.endpoint
+    DB_NAME     = var.db_name
+    DB_USERNAME = var.db_username
   }
 
   secrets = {
-    DATABASE_URL = data.aws_secretsmanager_secret.database_url.arn
+    DB_PASSWORD = "${module.rds.master_user_secret_arn}:password::"
   }
 
   tags = var.tags
