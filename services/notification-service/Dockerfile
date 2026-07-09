@@ -12,7 +12,7 @@ RUN apk add --no-cache python3
 RUN addgroup -S nonroot && adduser -S nonroot -G nonroot
 WORKDIR /app
 COPY --from=build --chown=nonroot:nonroot /app/notification-service-test .
-COPY --chown=nonroot:nonroot ../entrypoint.sh /entrypoint.sh
+COPY --chown=nonroot:nonroot services/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 USER nonroot
 EXPOSE 8084

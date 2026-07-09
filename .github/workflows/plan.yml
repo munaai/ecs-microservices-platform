@@ -17,6 +17,9 @@ on:
 
   workflow_dispatch:
     inputs:
+      image_tag:
+        description: "Image tag to deploy"
+        required: false
       run_checkov:
         description: "Run Checkov scan"
         required: false
@@ -98,7 +101,7 @@ jobs:
       - name: Create CI overrides
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: |
-          IMAGE_TAG="${{ github.event.workflow_run.head_sha || github.sha }}"
+          IMAGE_TAG="${{ github.event.inputs.image_tag || github.event.workflow_run.head_sha || github.sha }}"
 
           cat > ci.auto.tfvars <<EOF
           api_gateway_image = "${ECR_REGISTRY}/api-gateway:${IMAGE_TAG}"
