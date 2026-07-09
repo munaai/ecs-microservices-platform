@@ -1,3 +1,14 @@
+terraform {
+  required_version = ">= 1.10.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
 # Creates a Cloud Map Private DNS Namespace
 
 resource "aws_service_discovery_private_dns_namespace" "this" {
