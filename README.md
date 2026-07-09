@@ -284,3 +284,17 @@ I had to keep renaming the secrets but after this recovery_window_in_days = 0, w
 Secrets stack!!
 Even in production, teams still separate things by lifecycle and blast radius.
 Secrets are usually more sensitive and longer-lived than app infrastructure.
+
+### Service discovery
+app.munaibrahim.com is a public DNS
+Between ECS services a private internal DNS is needed.
+
+Cloud Map is AWS’s service discovery tool. It creates private names inside your VPC, for example:
+order-service.internal
+inventory-service.internal
+payment-service.internal
+
+A service registry means: “when ECS starts this service, register its private IP in Cloud Map”.
+order-service.internal → current private IP of the order-service task
+
+When ECS replaces the task, Cloud Map updates the IP.

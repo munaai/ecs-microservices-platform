@@ -78,6 +78,13 @@ resource "aws_ecs_service" "this" {
 
   enable_execute_command = var.enable_execute_command
 
+  dynamic "service_registries" {
+    for_each = var.service_discovery_arn == null ? [] : [var.service_discovery_arn]
+    content {
+      registry_arn = service_registries.value
+    }
+  }
+
   network_configuration {
     subnets          = var.subnet_ids
     security_groups  = [var.ecs_security_group_id]

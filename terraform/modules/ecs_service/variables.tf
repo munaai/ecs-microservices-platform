@@ -78,3 +78,8 @@ variable "tags" {
   type    = map(string)
   default = {}
 }
+
+variable "service_discovery_arn" {
+  type    = string
+  default = null
+}

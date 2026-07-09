@@ -229,6 +229,13 @@ module "api_gateway_service" {
   environment_variables = {
     REDIS_URL  = "redis://${module.redis.primary_endpoint_address}:6379"
     AWS_REGION = var.aws_region
+
+    ORDER_SERVICE_URL        = "http://order-service.internal:8081"
+    INVENTORY_SERVICE_URL    = "http://inventory-service.internal:8082"
+    PAYMENT_SERVICE_URL      = "http://payment-service.internal:8083"
+    NOTIFICATION_SERVICE_URL = "http://notification-service.internal:8084"
+    SHIPPING_SERVICE_URL     = "http://shipping-service.internal:8085"
+    DASHBOARD_SERVICE_URL    = "http://dashboard-api.internal:8086"
   }
 
   secrets = {
@@ -240,6 +247,8 @@ module "api_gateway_service" {
 
 module "order_service" {
   source = "./modules/ecs_service"
+
+  service_discovery_arn = module.service_discovery.service_arns["order-service"]
 
   service_name    = "order-service"
   container_name  = "order-service"
@@ -276,6 +285,8 @@ module "order_service" {
 module "inventory_service" {
   source = "./modules/ecs_service"
 
+  service_discovery_arn = module.service_discovery.service_arns["inventory-service"]
+
   service_name    = "inventory-service"
   container_name  = "inventory-service"
   container_image = var.inventory_service_image
@@ -309,6 +320,8 @@ module "inventory_service" {
 
 module "payment_service" {
   source = "./modules/ecs_service"
+
+  service_discovery_arn = module.service_discovery.service_arns["payment-service"]
 
   service_name    = "payment-service"
   container_name  = "payment-service"
@@ -345,6 +358,8 @@ module "payment_service" {
 module "notification_service" {
   source = "./modules/ecs_service"
 
+  service_discovery_arn = module.service_discovery.service_arns["notification-service"]
+
   service_name    = "notification-service"
   container_name  = "notification-service"
   container_image = var.notification_service_image
@@ -378,6 +393,8 @@ module "notification_service" {
 
 module "shipping_service" {
   source = "./modules/ecs_service"
+
+  service_discovery_arn = module.service_discovery.service_arns["shipping-service"]
 
   service_name    = "shipping-service"
   container_name  = "shipping-service"
@@ -413,6 +430,8 @@ module "shipping_service" {
 
 module "dashboard_api_service" {
   source = "./modules/ecs_service"
+
+  service_discovery_arn = module.service_discovery.service_arns["dashboard-api"]
 
   service_name    = "dashboard-api"
   container_name  = "dashboard-api"
@@ -527,4 +546,12 @@ module "route53" {
 
   alb_dns_name = module.alb.alb_dns_name
   alb_zone_id  = module.alb.alb_zone_id
+}
+
+module "service_discovery" {
+  source = "./modules/service_discovery"
+
+  namespace_name = var.service_discovery_namespace_name
+  vpc_id         = module.vpc.vpc_id
+  services       = var.service_discovery_services
 }

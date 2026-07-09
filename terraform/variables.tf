@@ -273,3 +273,13 @@ variable "root_domain_name" {
 variable "app_domain_name" {
   type = string
 }
+
+# service discovery
+
+variable "service_discovery_namespace_name" {
+  type = string
+}
+
+variable "service_discovery_services" {
+  type = set(string)
+}
