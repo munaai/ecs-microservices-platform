@@ -272,8 +272,10 @@ The recovery window can be:
 
 That’s why you saw:
 
-“You can’t create this secret because a secret with this name is already scheduled for deletion.”
+“You can’t create this secret because a secret with this name is already 
+scheduled for deletion.”
 
+Pipelines only run when needed. E.g. plan only runs on push when plan pipeline is ammended or terraform folder is ammended. Docker pipeline runs on push when the docker pipeline or the services folder is ammended.
 ### problems
 When task doesnt start look at excecution role first. 
 
@@ -298,3 +300,5 @@ A service registry means: “when ECS starts this service, register its private 
 order-service.internal → current private IP of the order-service task
 
 When ECS replaces the task, Cloud Map updates the IP.
+
+### SCRIPT

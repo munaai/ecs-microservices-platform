@@ -5,12 +5,12 @@ on:
     paths:
       - "terraform/**"
       - ".github/workflows/plan.yml"
-  push:
-    branches:
-      - main
-    paths:
-      - "terraform/**"
-      - ".github/workflows/plan.yml"
+ # push:
+   # branches:
+   #   - main
+   # paths:
+   #   - "terraform/**"
+   #   - ".github/workflows/plan.yml"
   workflow_run:
     workflows: ["Docker Build & Push"]
     types: [completed]
