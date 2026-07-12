@@ -206,6 +206,9 @@ Without Container Insights, CloudWatch already gives you some basic ECS metrics.
 With Container Insights enabled, you get much more information about your containers.
 
 ### IAM
+Task role is used by Your application code running inside the container
+Task Execution role is used by The ECS agent/Fargate platform
+
 Trust policy = who can use the role
 IAM Policy = What are you allowed to do once you’re inside?
 
@@ -301,4 +304,32 @@ order-service.internal → current private IP of the order-service task
 
 When ECS replaces the task, Cloud Map updates the IP.
 
-### SCRIPT
+### SCRIPT for secrets
+
+### worker
+* Implements the event-driven workflow by consuming events from Amazon SQS.
+* Orchestrates the payment, inventory, notification and order services.
+* Coordinates the order lifecycle by triggering downstream services and requests the Order Service to update the order state.
+
+* The AWS SDK is used whenever a Go application needs to interact with AWS services (e.g. SQS, Secrets Manager, S3).
+* It provides the client libraries that communicate with AWS APIs, so you don’t have to build the requests yourself.
+* Without the SDK, your Go code has no idea how to call SQS.
+
+SQS client
+The worker uses the SQS client to communicate with Amazon SQS.
+SQS client only talks to Amazon SQS.
+Receives, sends and deletes messages from the queue.
+
+HTTP client
+Once the worker has read an event, it needs to tell your other services to do work.
+The worker uses the HTTP client to make those API calls.
+* The HTTP client talks to your own microservices over HTTP
+* For example, the worker calls the Payment, Inventory and Notification services using HTTP requests.
+
+1. User places an order.
+2. Order Service creates the order.
+3. Order Service uses the AWS SDK (SQS client) to send an order.created event to SQS.
+4. Worker uses the AWS SDK (SQS client) to receive that event from SQS.
+5. Worker decides what needs to happen.
+6. Worker uses the HTTP client to call the Inventory, Payment, Notification and Order services.
+7. Worker uses the AWS SDK (SQS client) again to delete the processed message from SQS.
