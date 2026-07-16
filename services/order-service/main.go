@@ -12,11 +12,15 @@ import (
 	"strings"
 	"syscall"
 	"time"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/sqs"
 
 	_ "github.com/lib/pq"
 )
 
 var db *sql.DB
+var sqsClient *sqs.Client
 
 type Order struct {
 	ID         int             `json:"id"`
@@ -71,6 +75,15 @@ func main() {
 
 	waitForDB()
 	migrate()
+
+	ctx := context.Background()
+
+	cfg, err := config.LoadDefaultConfig(ctx)
+	if err != nil {
+		log.Fatalf("failed to load AWS config: %v", err)
+	}
+
+	sqsClient = sqs.NewFromConfig(cfg)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/livez", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusOK) })
@@ -383,9 +396,29 @@ func publishEvent(eventType string, payload map[string]interface{}) {
 		"payload":   payload,
 		"timestamp": time.Now().UTC().Format(time.RFC3339),
 	}
-	data, _ := json.Marshal(event)
+
+	data, err := json.Marshal(event)
+	if err != nil {
+		log.Printf("Failed to marshal event: %v", err)
+		return
+	}
+
 	log.Printf("Event -> SQS: %s", string(data))
-	// Students implement actual SQS SendMessage here
+
+	_, err = sqsClient.SendMessage(
+		context.Background(),
+		&sqs.SendMessageInput{
+			QueueUrl:    aws.String(sqsQueue),
+			MessageBody: aws.String(string(data)),
+		},
+	)
+
+	if err != nil {
+		log.Printf("Failed to send event to SQS: %v", err)
+		return
+	}
+
+	log.Printf("Event successfully sent to SQS")
 }
 
 func httpError(w http.ResponseWriter, msg string, code int) {
