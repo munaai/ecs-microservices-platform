@@ -7,6 +7,6 @@ locals {
     "app-2" = { cidr = "10.0.12.0/24", az = "eu-west-2b", tier = "app" }
 
     "db-1" = { cidr = "10.0.21.0/24", az = "eu-west-2a", tier = "db" }
-    "db-2" = { cidr = "10.0.22.0/24", az = "eu-west-2b", tier = "db" }
+    "db-2" = { cidr = "10.0.22.0/24", az = "eu-west-2c", tier = "db" }
   }
 }
